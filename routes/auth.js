@@ -47,6 +47,64 @@ router.post('/login', async (req, res) => {
     }
 })
 
+router.post('/register', async (req, res) => {
+    let { name, email, password, employeeID, role } = req.body;
+
+    name = name
+    email = email.toLowerCase().trim()
+    password = password.trim()
+    employeeID = employeeID.trim()
+    role = role.trim().toLowerCase()
+
+    if (validator.isEmpty(name) ||
+        validator.isEmpty(email) ||
+        validator.isEmpty(password) ||
+        validator.isEmpty(employeeID) ||
+        validator.isEmpty(role)) {
+        return res.json({
+            message: "All fields are required",
+            status: 401
+        })
+    } else if (!validator.isEmail(email)) {
+        return res.json({
+            message: "Email is not valid",
+            status: 401
+        })
+    }
+
+    const emailExists = await Employee.find({ email: email });
+    if (emailExists.length > 0) {
+        return res.json({
+            message: "A user with this email already exists!",
+            status: 401
+        })
+    }
+
+    const pass = await bcrypt.hash(password, 12)
+
+    const employee = new Employee({
+        name: name,
+        email: email,
+        password: pass,
+        employeeID: employeeID,
+        role: role,
+        claims: []
+    })
+
+    await employee.save().then(() => {
+        return res.json({
+            message: "User registered successfully",
+            status: 200
+        })
+    }).catch((err) => {
+        return res.json({
+            message: "User registration failed: ", err,
+            status: 401
+        })
+    })
+})
+
+
 const getToken = (employee) => {
     return jwt.sign(
         {
