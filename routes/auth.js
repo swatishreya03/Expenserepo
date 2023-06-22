@@ -46,6 +46,12 @@ router.post('/login', async (req, res) => {
             })
         }
     }
+    else {
+        return res.json({
+            message: "Email is not registered with us.",
+            status: 403
+        })
+    }
 })
 
 router.post('/register', async (req, res) => {

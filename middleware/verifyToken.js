@@ -13,7 +13,6 @@ module.exports = verifyToken = async (req, res, next) => {
                 return res.json({ status: 410, message: 'Invalid Token 1' })
             } else {
                 let email = decoded.email
-                console.log(email)
                 Employee.findOne({ email: email })
                     .then((data) => {
                         if (data) {
