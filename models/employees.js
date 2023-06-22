@@ -14,7 +14,7 @@ const employeeSchema = new mongoose.Schema({
         required: true,
     },
     employeeID: {
-        type: Number,
+        type: String,
         required: true,
     },
     role: {

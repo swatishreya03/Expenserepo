@@ -3,7 +3,7 @@ const router = express();
 const Employee = require('../models/employees');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const decoder = require('../middleware/decoder');
+const verifyToken = require('../middleware/verifyToken');
 const validator = require('validator');
 
 router.post('/login', async (req, res) => {
@@ -21,7 +21,7 @@ router.post('/login', async (req, res) => {
     } else if (!validator.isEmail(email)) {
         return res.json({
             message: "Email is not valid",
-            status: 401
+            status: 402
         })
     }
 
@@ -35,13 +35,14 @@ router.post('/login', async (req, res) => {
             return res.json({
                 message: "Login Successfull",
                 status: 200,
-                token: token
+                token: token,
+                role: employee.role
             })
         }
         else {
             return res.json({
                 message: "Password is incorrect",
-                status: 401
+                status: 403
             })
         }
     }
@@ -104,6 +105,15 @@ router.post('/register', async (req, res) => {
     })
 })
 
+// Get the role of the employee using token
+router.get('/', verifyToken, async (req, res) => {
+    const employee = await Employee.findOne({ email: req.user.email });
+    return res.json({
+        message: "User found",
+        status: 200,
+        role: employee.role
+    })
+})
 
 const getToken = (employee) => {
     return jwt.sign(
