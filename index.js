@@ -1,7 +1,10 @@
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
+const fileUpload = require('express-fileupload');
+
 const authRoute = require('./routes/auth')
+const claimRoute = require('./routes/claim')
 require('dotenv').config()
 
 const app = express();
@@ -10,6 +13,7 @@ const port = process.env.PORT;
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }))
+app.use(fileUpload());
 
 mongoose.set('strictQuery', true)
 mongoose
@@ -32,5 +36,6 @@ app.get('/', (req, res) => {
 });
 
 app.use('/auth', authRoute);
+app.use('/claim', claimRoute);
 
 app.listen(port);

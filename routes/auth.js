@@ -117,7 +117,8 @@ router.get('/', verifyToken, async (req, res) => {
     return res.json({
         message: "User found",
         status: 200,
-        role: employee.role
+        role: employee.role,
+        id: employee.employeeID
     })
 })
 
