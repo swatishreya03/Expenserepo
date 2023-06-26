@@ -101,7 +101,7 @@ router.get('/get-employee-claims/:id', verifyToken, async (req, res) => {
 })
 
 router.get('/get-employee-claims-hr/', verifyToken, async (req, res) => {
-    const claims = await Claim.find({ statusHR: false, statusAM: true, rejected: false })
+    const claims = await Claim.find({ statusAM: true, rejected: false })
 
     return res.json({
         message: "Claims fetched successfully",
@@ -111,7 +111,7 @@ router.get('/get-employee-claims-hr/', verifyToken, async (req, res) => {
 })
 
 router.get('/get-employee-claims-am/', verifyToken, async (req, res) => {
-    const claims = await Claim.find({ statusAM: false })
+    const claims = await Claim.find()
 
     return res.json({
         message: "Claims fetched successfully",
@@ -121,7 +121,7 @@ router.get('/get-employee-claims-am/', verifyToken, async (req, res) => {
 })
 
 router.get('/get-employee-claims-accounts/', verifyToken, async (req, res) => {
-    const claims = await Claim.find({ statusAM: true, statusHR: true, rejected: false, paid: false })
+    const claims = await Claim.find({ statusAM: true, statusHR: true, rejected: false})
 
     return res.json({
         message: "Claims fetched successfully",
