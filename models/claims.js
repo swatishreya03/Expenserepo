@@ -24,7 +24,7 @@ const claimSchema = new mongoose.Schema({
         type: String,
         default: new Date().toLocaleDateString(),
     },
-    
+
     claimAmount: {
         type: Number,
         default: 0,
@@ -71,11 +71,11 @@ const claimSchema = new mongoose.Schema({
         default: false,
     },
     invoice: {
-        type: Buffer,
+        type: String,
         default: null,
     },
     mail: {
-        type: Buffer,
+        type: String,
         default: null,
     }
 });
