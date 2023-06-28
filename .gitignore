@@ -2,6 +2,7 @@
 /build
 /dist
 /.git
+/uploads
 
 # IDE
 .vscode
