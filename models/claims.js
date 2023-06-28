@@ -5,6 +5,10 @@ const claimSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    name: {
+        type: String,
+        required: true,
+    },
     category: {
         type: String,
         required: true,
@@ -20,6 +24,7 @@ const claimSchema = new mongoose.Schema({
         type: String,
         default: new Date().toLocaleDateString(),
     },
+    
     claimAmount: {
         type: Number,
         default: 0,
@@ -29,7 +34,19 @@ const claimSchema = new mongoose.Schema({
         type: Boolean,
         default: false,
     },
+    rejectedAd: {
+        type: Boolean,
+        default: false,
+    },
+    rejectedAm: {
+        type: Boolean,
+        default: false,
+    },
     statusHR: {
+        type: Boolean,
+        default: false,
+    },
+    statusAdmin: {
         type: Boolean,
         default: false,
     },
@@ -42,6 +59,14 @@ const claimSchema = new mongoose.Schema({
         default: false,
     },
     approved: {
+        type: Boolean,
+        default: false,
+    },
+    approvedAd: {
+        type: Boolean,
+        default: false,
+    },
+    approvedAm: {
         type: Boolean,
         default: false,
     },

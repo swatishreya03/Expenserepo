@@ -56,6 +56,7 @@ router.post('/login', async (req, res) => {
 
 router.post('/register', async (req, res) => {
     let { name, email, password, employeeID, role } = req.body;
+    
 
     name = name
     email = email.toLowerCase().trim()
@@ -118,7 +119,8 @@ router.get('/', verifyToken, async (req, res) => {
         message: "User found",
         status: 200,
         role: employee.role,
-        id: employee.employeeID
+        id: employee.employeeID,
+        name: employee.name
     })
 })
 

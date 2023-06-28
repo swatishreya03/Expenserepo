@@ -6,7 +6,8 @@ const verifyToken = require('../middleware/verifyToken');
 const validator = require('validator');
 
 router.post('/add-claim', async (req, res) => {
-    const { employeeID, claimAmount, category, travel, otherCategory } = req.body;
+    const { employeeID, claimAmount, category, travel, otherCategory,name } = req.body;
+    console.log(req.body)
 
     if (validator.isEmpty(employeeID) || validator.isEmpty(claimAmount) || validator.isEmpty(category)) {
         return res.json({
@@ -52,7 +53,8 @@ router.post('/add-claim', async (req, res) => {
         travel: travel,
         otherCategory: otherCategory,
         invoice: binaryInvoice,
-        mail: binaryMail
+        mail: binaryMail,
+        name: name
     })
 
     claim.save()
@@ -110,8 +112,18 @@ router.get('/get-employee-claims-hr/', verifyToken, async (req, res) => {
     })
 })
 
+/*router.get('/get-employee-claims-admin/', verifyToken, async (req, res) => {
+    const claims = await Claim.find({rejected: false})
+
+    return res.json({
+        message: "Claims fetched successfully",
+        status: 200,
+        claims: claims
+    })
+})
+*/
 router.get('/get-employee-claims-am/', verifyToken, async (req, res) => {
-    const claims = await Claim.find()
+    const claims = await Claim.find({rejected: false})
 
     return res.json({
         message: "Claims fetched successfully",
@@ -121,7 +133,7 @@ router.get('/get-employee-claims-am/', verifyToken, async (req, res) => {
 })
 
 router.get('/get-employee-claims-accounts/', verifyToken, async (req, res) => {
-    const claims = await Claim.find({ statusAM: true, statusHR: true, rejected: false})
+    const claims = await Claim.find({ statusAM: true, statusHR: true, rejected: false}||{statusAdmin: true, approvedAd: true})
 
     return res.json({
         message: "Claims fetched successfully",
@@ -129,27 +141,41 @@ router.get('/get-employee-claims-accounts/', verifyToken, async (req, res) => {
         claims: claims
     })
 })
-
-router.put('/accept-hr/:id', verifyToken, async (req, res) => {
-    const claim = await Claim.findById(req.params.id)
-    claim.statusHR = true
-    await claim.save()
-    return res.json({
-        message: "Claim updated successfully",
-        status: 200,
-    })
-})
-
 router.put('/accept-am/:id', verifyToken, async (req, res) => {
     console.log('running')
     const claim = await Claim.findById(req.params.id)
     claim.statusAM = true
+    claim.approvedAm = true
     await claim.save()
     return res.json({
         message: "Claim updated successfully",
         status: 200,
     })
 })
+
+
+router.put('/accept-hr/:id', verifyToken, async (req, res) => {
+    const claim = await Claim.findById(req.params.id)
+    claim.statusHR = true;
+    claim.approved = true;
+    await claim.save()
+    return res.json({
+        message: "Claim updated successfully",
+        status: 200,
+    })
+})
+router.put('/accept-admin/:id', verifyToken, async (req, res) => {
+    const claim = await Claim.findById(req.params.id)
+    claim.statusAdmin = true
+    claim.approvedAd = true;
+    await claim.save()
+    return res.json({
+        message: "Claim updated successfully",
+        status: 200,
+    })
+})
+
+
 
 router.put('/reject-hr/:id', verifyToken, async (req, res) => {
     const claim = await Claim.findById(req.params.id)
@@ -161,11 +187,21 @@ router.put('/reject-hr/:id', verifyToken, async (req, res) => {
         status: 200,
     })
 })
+router.put('/reject-admin/:id', verifyToken, async (req, res) => {
+    const claim = await Claim.findById(req.params.id)
+    claim.statusAdmin = true
+    claim.rejectedAd = true
+    await claim.save()
+    return res.json({
+        message: "Claim updated successfully",
+        status: 200,
+    })
+})
 
 router.put('/reject-am/:id', verifyToken, async (req, res) => {
     const claim = await Claim.findById(req.params.id)
     claim.statusAM = true
-    claim.rejected = true
+    claim.rejectedAm = true
     await claim.save()
     return res.json({
         message: "Claim updated successfully",
@@ -186,7 +222,6 @@ router.put('/reject-accounts/:id', verifyToken, async (req, res) => {
 router.put('/mark-paid/:id', verifyToken, async (req, res) => {
     const claim = await Claim.findById(req.params.id)
     claim.paid = true
-    claim.approved = true
     await claim.save()
     return res.json({
         message: "Claim updated successfully",
