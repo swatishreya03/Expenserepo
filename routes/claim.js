@@ -6,8 +6,7 @@ const verifyToken = require('../middleware/verifyToken');
 const validator = require('validator');
 
 router.post('/add-claim', async (req, res) => {
-    const { employeeID, claimAmount, category, travel, otherCategory,name } = req.body;
-    console.log(req.body)
+    const { employeeID, claimAmount, category, travel, otherCategory, name } = req.body;
 
     if (validator.isEmpty(employeeID) || validator.isEmpty(claimAmount) || validator.isEmpty(category)) {
         return res.json({
@@ -16,7 +15,7 @@ router.post('/add-claim', async (req, res) => {
         })
     }
 
-    if (category === 'Travel') {
+    if (category === 'travel') {
         if (validator.isEmpty(travel)) {
             return res.json({
                 message: "Travel Details are required",
@@ -25,7 +24,7 @@ router.post('/add-claim', async (req, res) => {
         }
     }
 
-    if (category === 'Other') {
+    if (category === 'other') {
         if (validator.isEmpty(otherCategory)) {
             return res.json({
                 message: "Other Category Details are required",
@@ -57,12 +56,11 @@ router.post('/add-claim', async (req, res) => {
         name: name
     })
 
-    claim.save()
-        .then((data) => {
+    await claim.save()
+        .then(() => {
             return res.json({
                 message: "Claim added successfully",
                 status: 200,
-                claim: data
             })
         })
         .catch((err) => {
@@ -123,7 +121,7 @@ router.get('/get-employee-claims-hr/', verifyToken, async (req, res) => {
 })
 */
 router.get('/get-employee-claims-am/', verifyToken, async (req, res) => {
-    const claims = await Claim.find({rejected: false})
+    const claims = await Claim.find({ rejected: false })
 
     return res.json({
         message: "Claims fetched successfully",
@@ -133,7 +131,7 @@ router.get('/get-employee-claims-am/', verifyToken, async (req, res) => {
 })
 
 router.get('/get-employee-claims-accounts/', verifyToken, async (req, res) => {
-    const claims = await Claim.find({ statusAM: true, statusHR: true, rejected: false}||{statusAdmin: true, approvedAd: true})
+    const claims = await Claim.find({ statusAM: true, statusHR: true, rejected: false } || { statusAdmin: true, approvedAd: true })
 
     return res.json({
         message: "Claims fetched successfully",
