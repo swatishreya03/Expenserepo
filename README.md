@@ -1,2 +1,2 @@
-# Expenserepo
-#Backend Repo on NodeJs with database inn Mongodb
+# Edudigm Expense Management Software - Backend
+##### Backend Repo on NodeJs with database in MongoDB
